@@ -1,0 +1,52 @@
+This database consists of three tables, which are described below.
+
+Term, which has three attributes
+		Term – a term description, like “Spring 1 2014” (and primary key)
+		Term _Start Date – the actual start date of the term, like “2014-01-18”
+	 	Term _End Date – the actual end date of the term, like “2014-03-07”
+    
+Course, which has two attributes
+		Course_Code – a course identifier, (the primary key)
+like “MET CS 200”
+		Course_Title – the class title, 
+like “Fundamentals of Information Technology”
+
+Course_List, which has five attributes
+		ID – An automatically generated number (and primary key)
+		Course_Code – a section number, like “MET CS 200”
+		Term – a term description, like “Spring 1 2014”
+		Instructor – last name of the instructor for the course, like “Tis”
+		ClassroomCode – a numeric code for the classroom where the class is held
+    
+7.Create table Term(Term varchar(500),Term_StartDate date,Term_EndDate date,Primary Key(Term))
+
+8.INSERT INTO `term`(`Term`, `Term_StartDate`, `Term_EndDate`) VALUES ('Spring 1 2014','2014-01-18','2014-03-07')
+INSERT INTO `term`(`Term`, `Term_StartDate`, `Term_EndDate`) VALUES ('Spring 2  2014','2014-03-14','2014-05-01')
+INSERT INTO `term`(`Term`, `Term_StartDate`, `Term_EndDate`) VALUES ('Summer 1 2014','2014-05-10','2014-06-27')
+
+9.SELECT * FROM `term` 
+
+10.Create table Course(Course_Code varchar(500),Course_Title text,PRIMARY KEY(Course_Code))
+
+11.INSERT INTO `course`(`Course_Code`, `Course_Title`) VALUES ('MET CS 200','Fundamentals of Information Technology')
+INSERT INTO `course`(`Course_Code`, `Course_Title`) VALUES ('MET CS 546','Quantitative Methods for Information Systems')
+INSERT INTO `course`(`Course_Code`, `Course_Title`) VALUES ('MET CS 625','Business Data Communication and Networks')
+INSERT INTO `course`(`Course_Code`, `Course_Title`) VALUES ('MET CS 669','Database Design and Implementation for Business')
+INSERT INTO `course`(`Course_Code`, `Course_Title`) VALUES ('MET CS 682','Information Systems Analysis and Design')
+
+12.SELECT  *  FROM  course
+
+13.Create table Course_List(ID int AUTO_INCREMENT, Course_Code varchar(500), Term varchar(500), Instrutor text, ClassroomCode int,PRIMARY KEY(ID), FOREIGN KEY (Term) REFERENCES Term(Term), FOREIGN KEY (Course_Code) REFERENCES Course(Course_Code))
+
+14.INSERT INTO `course_list`(`ID`, `Course_Code`, `Term`, `Instrutor`, `ClassroomCode`) VALUES ('1','MET CS 200','Spring 1 2014','Tis','1')
+INSERT INTO `course_list`(`ID`, `Course_Code`, `Term`, `Instrutor`, `ClassroomCode`) VALUES ('2','MET CS 669','Spring 1 2014','Schudy','2')
+INSERT INTO `course_list`(`ID`, `Course_Code`, `Term`, `Instrutor`, `ClassroomCode`) VALUES ('3','MET CS 682','Spring 2 2014','Braude','1')
+INSERT INTO `course_list`(`ID`, `Course_Code`, `Term`, `Instrutor`, `ClassroomCode`) VALUES ('4','MET CS 625','Spring 2 2014','Chitkushev','2')
+INSERT INTO `course_list`(`ID`, `Course_Code`, `Term`, `Instrutor`, `ClassroomCode`) VALUES ('5','MET CS 546','Summer 1 2014','Temkin','3')
+
+15.SELECT * FROM `course_list`
+
+16.SELECT * FROM `course_list` WHERE ClassroomCode='2'
+
+17.SELECT Term_StartDate,Term_EndDate FROM `term` WHERE Term='Spring 2 2014'
+
