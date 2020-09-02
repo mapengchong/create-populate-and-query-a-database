@@ -1,0 +1,88 @@
+1.Write a SQL SELECT command that displays the course code, course title, and instructor for all courses in the course list table.  
+
+Type the SQL command in your Word document and insert a screenshot of phpMyAdmin showing the successful execution of the command including the results.  Insert one or more screenshots as necessary to show everything.  
+
+This instruction is the same for all of the following questions.
+
+SELECT course_list.Course_Code,course.Course_Title,course_list.Instrutor
+FROM course_list,course
+where course_list.Course_Code=course.Course_Code;
+
+
+2.Write a SQL Select command that displays the course code, instructor, term start and end dates from the course list and term tables.
+
+SELECT course_list.course_code, course_list.Instrutor, term.Term_StartDate, term.Term_EndDate
+from course_list,term
+where course_list.Term=term.Term;
+
+
+Now let’s add another table
+3.Write a SQL CREATE TABLE command to create a table for “Classroom” that identifies the classrooms for each Classroom code.  This is a new table, not defined above.  Include the following attributes:
+a.	ClassroomCode
+b.	Location
+c.	Room
+d.	Campus
+Identify an appropriate primary key and write the CONSTRAINT clause as part of the CREATE TABLE script to define it as a primary key.
+
+create table Classroom(ClassroomCode INT,Location text not null,Room text not null,campas text not null,PRIMARY KEY(ClassroomCode));
+
+4. Write the SQL INSERT commands to add the following data into your new table.  Afterwards perform a SELECT to show all the data in the table and include a screen shot of the results.
+
+INSERT INTO classroom(ClassroomCode, Location, Room, campas)
+            VALUES ('1','Corporate Education Center','112','Tewksbury');
+INSERT INTO classroom(ClassroomCode, Location, Room, campas)
+            VALUES ('2','755 Commonwealth Ave' , '437', 'Charles River');
+INSERT INTO classroom(ClassroomCode, Location, Room, campas)
+            VALUES ('3',"'Boulevard du Triomphe 174, Triomflaan’",'203','Brussels');
+SELECT * FROM classroom;
+
+5.Do any changes need to be made to the tables you defined in the previous assignment in order to accommodate the new table "Classroom"?  If so, what are they?
+
+Yes, only following, one change is needed on Course_List table.
+
+•	ClassroomCode of Course_List will need to be defined as foreign key that refers the new table that is Classroom table’s primary key defined as ClassroomCode.
+•	ALTER table course_list
+            ADD
+            FOREIGN KEY course_list_fk(ClassroomCode)
+            REFERENCES classroom(ClassroomCode);
+
+6.Write a SELECT command that displays the course code, term, instructor, campus, location and room for all courses in the course list table.
+
+SELECT course_list.Course_Code, course_list.term, course_list.Instructor, classroom.campus, classroom.location, classroom.room  
+            FROM course_list,classroom 
+            WHERE course_list.ClassroomCode=classroom.ClassroomCode;
+
+
+7. Write a SQL command to add a new column to the Classoom table called Equipment.    
+ 
+ ALTER TABLE course_list
+            ADD COLUMN Equipment text;
+
+8.Write a SQL command to delete all the records from the Classroom table for Brussels campus.  What error did you get when you ran this command in MySQL?  What does the error mean?
+
+DELETE FROM classroom WHERE campas='Brussels';
+
+Error : Cannot delete or update a parent row: a foreign key constraint fails (`course_scheduling`.`course_list`, CONSTRAINT `course_list_fk` FOREIGN KEY (`ClassroomCode`) REFERENCES `classroom`
+
+Yes it means, because we can not delete the parents rows unless data related to it in its child table got deleted. This is called foreign key constraints and it should be validated to perform any operations where referential key is used.
+
+
+9.Write a SQL command to update the ClassroomCode for all courses in the Course_List table currently with a ClassroomCode of 3 so they will now have a ClassroomCode of 1.  Perform a SELECT of all the data in the table before you make the update and include a screen shot, and then again after you have made the update.
+
+Before update : 
+select * from course_list;
+
+Performing update : 
+UPDATE course_list SET ClassroomCode='1' WHERE ClassroomCode='3';
+
+After update : 
+select * from course_list;
+
+10.Run your SQL statement from instruction 8 again and provide a screenshot of its successful execution.  Why did it work now?
+
+DELETE FROM classroom WHERE campas='Brussels';
+•	Because we have already updated the table in the instruction 9 such that no row of classroom code 3 left in course_list(child table of foreign key constraint) table and after updating it all the foreign key constraints are validating to delete that we wanted to delete from Classroom table.
+•	Previously, there was the row of classroom code 3 in child table, that need to be deleted or updated to do perform the deletion in its parent table to maintain foreign key constraint. And we did using instruction 9.
+
+11.Create a relationship diagram showing all four tables.  The diagram at the top of Assignment 3 is an example of a relationship diagram.
+
