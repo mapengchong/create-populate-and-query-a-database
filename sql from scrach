@@ -1,0 +1,140 @@
+The purpose of this lab is to gently get you started using the Structured Query Language (SQL), by teaching you the most fundamental commands and concepts step-by-step. SQL is the de-facto query language for modern relational database management systems (RDBMS). All major, modern RDBMS support SQL. Database developers, administrators, and even software applications access RDBMS through the use of SQL. Familiarity with SQL is essential for working with and understanding modern RDBMS. 
+
+In this lab, you will learn how to:
+•	create and drop a table.
+•	insert, update, delete, and select a row in a table.
+•	use strings, dates, and numbers.
+•	use a WHERE clause to limit the number of rows affected by the SELECT, UPDATE, and DELETE commands.
+•	SELECT only a subset of columns in a result set.
+•	add a NOT NULL constraint to a table column.
+•	add a PRIMARY KEY constraint to a table column.
+•	Insert a NULL value into a table row.
+
+You will need to install a RDBMS prior to completing this lab. If you are using Oracle, it is highly recommended that you create and login as a non-system user, to avoid damaging the database. You can create a user with the following commands:
+
+CREATE USER username IDENTIFIED BY password DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp;
+GRANT connect, resource TO username;
+
+You will then be able to login as the new user.
+ 
+If you are using Microsoft SQL Server, it is highly recommended that you create and use a database other than the Master database. You can do so with the following commands:
+
+CREATE DATABASE database_name;
+GO;
+USE database_name;
+
+If you are using PostgreSQL you can use the UI wizard to create a database or use the following script from the default databse created at time of installation:
+
+CREATE DATABASE database_name;
+
+1. Create the Movie table. As a reminder, make sure to follow along in the Lab 1 Explanations document as it shows you how to create tables and complete the other steps.
+
+create table 'movie'(
+'Title' vachar(64)
+"ReleaseDate' date,
+'Price' decimal(6,2)
+)
+
+2. Insert the first row where the title is “Furious 7”, the genre is “Action Film”, the release date is 4/1/2015, and the price is $9.94.
+
+INSERT INTO 'movie'('Title', 'Genre', 'ReleaseDate', 'Price') VALUES
+('Furious 7','Action Film',;1-April-2015','9.94');
+
+3. Select all rows in the table to view the row you inserted.
+
+SELECT*
+From movie;
+
+4. Update the price of the row in the table to $10.15, then select all rows in the table to view the row you updated.
+
+UPDATE 'movie' set 'Price'=10.15
+SELECT*From 'movie'
+
+5. Remove all rows from the table, then select all rows in the table to verify there are no rows.
+
+DELECT From'movie'
+SELECT* From'movie'
+
+6. Drop the Movie table, then select all rows in the table to verify the table doesn’t exist.
+
+DROP TABLE movie;
+
+7. Explain how you would use the error message resulting from step #6, in conjunction with the SELECT command, to diagnose the error.
+
+8. Create the Vacation table with its columns, datatypes, and constraints. As a reminder, make sure to follow along in the Lab 1 Explanations document as it shows you how to complete the steps.
+
+CREATE TABLE Vacation(
+vocation_id DECIMAL(12) PRIMARY KEY,
+Locatoion VARCHAR(64) NOT NULL,
+Description VARCHAR(1024) NULL,
+StartedOn DATE NOT NULL,
+EndedOn DATE NOT NULL
+);
+
+9. Insert the rows illustrated in the figure below.
+
+insert into 'vacation'('vocation_id', 'Location', 'Description',
+'StartedOn', 'EndedOn') VALUES(1,'Coasta Rica','Relexing Hot Spring','1/13/2019','1/21/2019')
+insert into 'vacation'('vocation_id', 'Location', 'Description',
+'StartedOn', 'EndedOn') VALUES(2,'Bora','Exciting Snorkeling','3/5/2019','3/15/2019')
+insert into 'vacation'('vocation_id', 'Location','StartedOn', 'EndedOn') VALUES(3,'Jamacia','12/10/2018',12/28/2018')
+
+
+10. Select all rows from the Vacation table to show that the inserts were successful. 
+
+SELECT * From 'vacation'
+
+11. Attempt to insert a row with the following values. The insert command will fail because the location column must have a value.
+
+VacationId = 4
+Location = NULL
+Description = Experience the Netherlands No Other Way
+StartedOn = 1/1/2020
+EndedOn = 1/10/2020
+Explain how you would interpret the error message conclude that the location column is missing a required value.
+
+INSERT INTO'vacation'('vocation_id','Description','StattedOn','EndedOn')
+VALUES(4,'Experience the Netherlands No other way','1/1/2020','1/10/2020')
+
+12. Now insert the row with a location intact, with the following values.
+
+VacationId = 4
+Location = Netherlands
+Description = Experience the Netherlands No Other Way
+StartedOn = 1/1/2020
+EndedOn = 1/10/2020
+
+INSERT INTO'vacation'('vocation_id','Location','Description',StartedOn','EndedOn')VALUES(4,'Netherlands','Experience the Netherlands No Other way','1/1/2020','1/10/2020')
+
+13. Retrieve only the location and description for the Bora Bora vacation, using the primary key as the column that determines which row is retrieved. Explain why it is useful to limit the number of rows and columns returned from a SELECT statement.
+
+SELECT Location, description
+From vacation
+WHERE vocation_id=2;
+
+14. The Jamaica vacation has no description. Update the row so that its description is “Aquatic Wonders”. Select all rows in the table to show that the update was successful.
+
+UPDATE Vocation
+SET description = 'Aquatic Wonders'
+WHERE vocation_id=3;
+SELECT *From'vacation'
+
+15. Update the Jamaica vacation so that it no longer has the description (i.e. its description is null). Select all rows in the table to show that the update was successful.
+
+UPDATE vacation
+SET description =NULL
+WHERE vocation_id= 3;
+SELECT* From'vacation'
+
+16. Delete all rows where the vacation started on a date greater than June 1st, 2019, by using the StartedOn column as the determinant of which rows are deleted. Select all rows in the table to show the delete was successful
+DELECT From vacation
+WHERE StartEDoN > 6/1/2019;
+SELECT *From'vacation'
+	
+
+
+
+
+
+
+
