@@ -1,0 +1,133 @@
+1. Create the Pizza and Toppings tables, including all of their columns, datatypes, and constraints, including the foreign key constraint.
+
+CREATE TABLE Restaurant ( restaurant_id DECIMAL(12) PRIMARY KEY, name VARCHAR(64) NOT NULL
+);
+CREATE TABLE Meal (
+meal_nr DECIMAL(12) NOT NULL, description VARCHAR(255) NOT NULL, date_served DATE NOT NULL, restaurant_id DECIMAL(12)
+);
+ALTER TABLE Meal
+ADD CONSTRAINT meal_pk PRIMARY KEY(meal_nr);
+ ALTER TABLE Meal
+ADD CONSTRAINT meal_restaurant_fk FOREIGN KEY(restaurant_id) REFERENCES Restaurant(restaurant id);
+
+2.Insert at least four rows into the Pizza table. One of the pizzas should be named “Plain” because it will not have any toppings. Other than this, you select the ids, names, dates, and prices of your choosing (maybe you have some favorite pizzas?).
+Insert toppings of your choosing into the topping table. One of the toppings should not be associated with any pizza, that is, the topping should be an “add‐on” which is not included in any pizza’s standard toppings. Ensure that the “Plain” pizza has no toppings, and that all other pizzas have at least two toppings. Select all rows in both tables to view what you inserted.
+ 
+INSERT INTO Restaurant (restaurant_id, name) VALUES (31, 'Sunset Grill');
+INSERT INTO Restaurant (restaurant_id, name) VALUES (32, 'Oceanside Beachview');
+INSERT INTO Meal (meal_nr, description, date_served, restaurant_id)
+VALUES (101, 'Grilled eggplant with sides', CAST('03-Jul-2012' AS DATE), 31); INSERT INTO Meal (meal_nr, description, date_served, restaurant_id) VALUES(102, 'Delicious pizza with salad', CAST('09-Jul-2012' AS DATE), 31); INSERT INTO Meal (meal_nr, description, date_served, restaurant_id) VALUES(103, 'Five-course luxurious meal', CAST('13-Jul-2012' AS DATE), NULL);
+
+3. As an exercise, attempt to insert a topping that references a pizza that doesn’t exist. Summarize:
+a. why the insertion failed, and
+b. how you would interpret the error message from your RDBMS so that you know that the error indicates the Pizza reference is invalid.
+ 
+INSERT INTO Meal (meal_nr, description, date_served, restaurant_id) VALUES(104, 'Juicy entree and french fries', CAST('17-Jul-2012' AS DATE), 57);
+
+4. Summarize:
+a. what a join is and how joins help answer questions using related data, and
+b. the similarities and differences between an inner join, a left join, a right join,
+and a full outer join.
+
+There are four broad join types – inner, left, right, and outer. All four joins have the conceptual first step of creating the cartesian product and all four keep the rows that match the join condition. The left, right, and outer join also keep additional rows. An inner join is what you have just learned about, a join between two tables where all rows that match the join condition are kept and all others are removed. The terms basic join, standard join, and inner join are synonymous. A left join keeps the rows that match the join condition as well a distinct list of rows from the first (leftmost) table that did not match the join condition. A right join keeps the rows that match the join condition as well a distinct list of rows from the second (rightmost) table that did not match the join condition. An outer join is a combination of the left and right join, where rows that match the join condition are included, as well as a distinct list of rows from both the first and second tables that did not match the join condition.
+
+5. With a single SQL query, fulfill the following request:
+List the names of the pizzas that have toppings, and the names of all of the toppings that go with each pizza.
+From a technical SQL perspective, explain why some rows in the Pizza table and some rows in the Toppings table were not listed.
+
+SELECT description, date_served, name
+FROM Meal
+JOIN Restaurant ON Meal.restaurant_id = Restaurant.restaurant_id;
+
+SELECT description, date_served, name
+FROM Meal
+LEFT JOIN Restaurant ON Meal.restaurant_id = Restaurant.restaurant_id;
+
+SELECT description, date_served, name
+FROM Meal
+RIGHT JOIN Restaurant ON Meal.restaurant_id = Restaurant.restaurant_id ORDER BY name;
+
+SELECT description, date_served, name
+FROM Meal
+FULL JOIN Restaurant ON Meal.restaurant_id = Restaurant.restaurant_id ORDER BY description DESC;
+
+6. Fulfill the following request:
+List the names and availability date of all pizzas whether or not they have toppings. For the pizzas that have toppings, list the names of the toppings that go with each of those pizzas. Order the list by the availability date, oldest to newest.
+There are two kinds of joins that can be used to satisfy this request. Write two queries using each type of join to satisfy this request.
+ 
+ SELECT name, data_available from Pizza where exists(selecy topping_name from Topping.pizza_id=Pizza.pizza_id and topping_name = 'NULL')
+ order by date_available asc
+ 
+ SELECT name, date_available,topping_name from Pizza INNER JOIN tOPPING.PIZZA_ID=Pizza.pizza_id where topping_name='NULL' order by date_available asc
+ 
+ 7.List the names of all toppings whether or not they go with a pizza, and the names of the pizzas the toppings go with. Order the list by topping name in reverse alphabetical order.
+ 
+ SELECT 'name' as Topping_name, name from Pizza union all SELECT'topping_name', topping_name from Topping order by topping_name asc
+ 
+ 8.List the names of all pizzas and all toppings, as well as which pizzas go with which toppings. Order the list alphabetically by pizza name then by topping name.
+ 
+ SELECT name, topping_name from Pizza inner join Topping on Topping.pizza_id=Pizza.pizza_id where topping_name='NULL'order by name asc
+ 
+ 9. Summarize in your own words why it’s not ideal to manually lookup or eyeball answers to questions about data in a database.
+ Obviously, I.T. systems are not capable of eyeballing, and need formal SQL logic in order to access relational databases. Lastly, many real‐ world relational database schemas contain too many tables, relationships, and values for us to practically keep track them ourselves, so even if we want to answer a question ourselves, we still need to use SQL to obtain the values we need from the database. We develop SQL queries to answer our data questions in today’s world.
+ 
+ 10. Summarize in your own words four significant components that determine how a value is displayed in your SQL client.
+ DROP TABLE Meal;
+DROP TABLE Restaurant;
+CREATE TABLE Restaurant (
+restaurant_id DECIMAL(12) PRIMARY KEY,
+name VARCHAR(64) NOT NULL
+);
+CREATE TABLE Meal (
+meal_nr DECIMAL(12) NOT NULL,
+description VARCHAR(255) NOT NULL,
+date_served DATE NOT NULL,
+price_paid DECIMAL(8,2) NOT NULL,
+restaurant_id DECIMAL(12)
+);
+ALTER TABLE Meal
+ADD CONSTRAINT meal_pk
+PRIMARY KEY(meal_nr);
+ALTER TABLE Meal
+ADD CONSTRAINT meal_restaurant_fk
+FOREIGN KEY(restaurant_id)
+REFERENCES Restaurant(restaurant_id);
+INSERT INTO Restaurant (restaurant_id, name) VALUES (31, 'Sunset Grill');
+INSERT INTO Restaurant (restaurant_id, name) VALUES (32, 'Oceanside Beachview');
+INSERT INTO Meal (meal_nr, description, date_served, price_paid, restaurant_id) VALUES (101, 'Grilled eggplant with sides', CAST('03‐Jul‐2012' AS DATE), 20.99, 31); INSERT INTO Meal (meal_nr, description, date_served, price_paid, restaurant_id) VALUES(102, 'Delicious pizza with salad', CAST('09‐Jul‐2012' AS DATE), 14.50, 31); INSERT INTO Meal (meal_nr, description, date_served, price_paid, restaurant_id) VALUES(103, 'Five‐course luxurious meal', CAST('13‐Jul‐2012' AS DATE), 65.00, NULL);
+
+First, raw values. Different types of data have different limitations. The type and limitation of the data type of the value is a component that determines how it is displayed in the SQL client.
+Second, manipulations on the values. When operating on a value, an SQL query can produce results in a different form from the original stored value.
+Third, formatting constructs. We can use format constructs to explicitly shape the structure and appearance of the results. These constructions usually take the form of format functions, which are usually vendor specific. Format functions can be used to display results in the desired pattern.
+Fourth, SQL Client Choices. Different SQL clients may display the same results in different ways. The main reason for these differences is that each team or vendor creating an SQL client decides independently how to display the results. The SQL client is just an application developed by the application team, which decides how to display the results.
+
+11. Summarize in your own words:
+a.	what expressions are.
+
+Expressions are composed of operands and operators. These operands are values or hard coded values in the database, and operators are SQL keywords or symbols, which result from one or more operands in a predefined way.
+
+b.	what operator precedence is and the role it plays in expressions.
+
+Operator priority applies to all expressions in all SQL queries without change. Also, operator Priority Determines the Order of Operations in Expressions.
+
+c.	what datatype precedence is and the role it plays in expressions.
+
+Data type conversion involves many details. We use explicit or implicit conversion between data types to get the final data type of expression results.
+
+12. Fulfill the following request with a single query:
+Management of the pizza shop wants to review its pizza pricing. List the names and prices of all pizzas, making sure to format the price monetarily in U.S. dollars (for example, “$11.99”).
+
+SELECT name as Pizza_Name,concet("$",price) as Price from Pizza
+
+13. Fulfill the following request with a single query:
+The pizza shop is running a special where every pizza is discounted by a dollar. List the names and discounted prices of all pizzas, making sure to format the price monetarily in U.S. dollars.
+
+SELECT name as Pizza_Name,concat("$","1") as Discounted_Price from Pizza
+
+14. Fulfill the following request with a single query:
+The pizza shop wants to mail out mailers that promotes all of the toppings it offers, tied into the pizzas it sells. The shop wants each line in the mailer formatted like “ToppingName (PizzaName: Price)”, and wants the lines ordered alphabetically by topping name. For example, if a “Meat Lover’s” pizza costs $10.00 and has two toppings – Sausage and Pepperoni – the results would have two lines for this pizza:
+Pepperoni (Meat Lover’s: $10.00)
+Sausage (Meat Lover’s: $10.00)
+
+SELECT Topping_name,concat("(",Pizza.name,":$",Pizza.price,")") as Pizza_Details From Pizza JOIN Topping ON Pizza.pizza_id=Topping.pizza_id order by Topping_name
+
