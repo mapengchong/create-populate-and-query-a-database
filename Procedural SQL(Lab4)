@@ -1,0 +1,181 @@
+Basic Oracle Stored Procedure
+CREATE OR REPLACE PROCEDURE add_train_station_tfgreen
+IS
+BEGIN
+  INSERT INTO TrainStation(stationNumber_id,station_name, station_city)     
+  VALUES(100, 'TFGreen', 'Warwick');
+END;
+
+BEGIN
+  ADD_TRAIN_STATION_TFGREEN; 
+END;
+/
+
+Basic SQL Server Procedure
+CREATE OR ALTER PROCEDURE AddTrainStationTFGreen
+AS
+BEGIN
+  INSERT INTO TrainStation(stationNumber_id,station_name, station_city) 
+  VALUES(100, 'TFGreen', 'Warwick');
+END
+
+EXECUTE AddTrainStationTFGreen;
+
+Basic Postgres Stored Procedure
+CREATE OR REPLACE FUNCTION add_train_station_tfgreen() RETURNS VOID 
+AS 
+$proc$ 
+BEGIN 
+  INSERT INTO TrainStation(stationNumber_id,station_name, station_city) 
+  VALUES(100, 'TFGreen', 'Warwick’);
+END; 
+$proc$ LANGUAGE plpgsql;
+
+DO 
+ $$
+  BEGIN
+   EXECUTE ADD_TRAIN_STATION_TFGREEN();
+  END;
+ $$
+Basic Oracle Reusable Procedure
+CREATE OR REPLACE PROCEDURE add_train_station (
+  station_number_id IN DECIMAL,
+  station_name IN VARCHAR,
+  station_city IN VARCHAR)
+IS
+BEGIN
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city)     
+  VALUES(station_number_id, station_name, station_city);
+END;
+
+BEGIN
+  add_train_station(100, 'TFGreen', 'Warwick’);
+END;
+/
+
+Basic SQL Server Reusable Procedure
+CREATE OR ALTER PROCEDURE AddTrainStation
+  @StationNumberId DECIMAL(12),
+  @StationName VARCHAR(50),
+  @StationCity VARCHAR(50)
+AS
+BEGIN
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city) 
+  VALUES(@StationNumberId, @StationName, @StationCity);
+END;
+EXECUTE AddTrainStation 100, 'TFGreen', 'Warwick’; 
+
+Basic Postgres Reusable Stored Procedure
+CREATE OR REPLACE FUNCTION add_train_station(
+  station_number_id IN DECIMAL,
+  station_name IN VARCHAR,
+  station_city IN VARCHAR)
+RETURNS VOID 
+AS 
+$proc$ 
+BEGIN 
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city) 
+  VALUES(station_number_id, station_name, station_city);
+END; 
+$proc$ LANGUAGE plpgsql
+DO 
+ $$
+  BEGIN
+   EXECUTE ADD_TRAIN_STATION(100, 'TFGreen', 'Warwick’);
+  END;
+ $$
+
+Enhanced add_train_station (Oracle)
+CREATE OR REPLACE PROCEDURE add_train_station (
+  station_number_id IN DECIMAL,
+  station_name IN VARCHAR,
+  station_city IN VARCHAR)
+IS
+  v_station_code VARCHAR(3); --Declare a variable to hold the code.
+BEGIN
+  --Calculate the variable’s value.
+  v_station_code := SUBSTR(station_name, 1, 3);
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city, station_code)     
+  VALUES(station_number_id, station_name, station_city, v_station_code);
+END;
+BEGIN
+  add_train_station(100, 'TFGreen', 'Warwick’); --Code is automatically ‘TFG’
+END;
+/
+
+Enhanced add_train_station (SQL Server)
+CREATE OR ALTER PROCEDURE AddTrainStation
+  @StationNumberId DECIMAL(12),
+  @StationName VARCHAR(50),
+  @StationCity VARCHAR(50)
+AS
+BEGIN
+  DECLARE @VStationCode VARCHAR(3); --Declare a variable to hold the code.  --Calculate the code.
+  SET @VStationCode= SUBSTRING(@StationName, 1, 3); 
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city, station_code) 
+  VALUES(@StationNumberId, @StationName, @StationCity, @VStationCode);
+END;
+EXECUTE AddTrainStation 100, 'TFGreen', 'Warwick’; --Station code is ‘TFG’ 
+
+Enhanced add_train_station (Postgres)
+CREATE OR REPLACE FUNCTION add_train_station(
+  station_number_id IN DECIMAL,
+  station_name IN VARCHAR,
+  station_city IN VARCHAR)
+RETURNS VOID 
+AS 
+$proc$ 
+DECLARE
+  v_station_code VARCHAR(3); --Declare a variable to hold the code.
+BEGIN
+  v_station_code := SUBSTRING(station_name FROM 1 FOR 3); --Calculate the code.
+  INSERT INTO TrainStation(stationNumber_id, station_name, station_city, station_code) 
+  VALUES(station_number_id, station_name, station_city, v_station_code);
+END; 
+$proc$ LANGUAGE plpgsql
+DO 
+ $$
+  BEGIN
+   EXECUTE ADD_TRAIN_STATION(100, 'TFGreen', 'Warwick’); --Station code is ‘TFG’
+  END;
+ $$
+
+Sample Oracle Validation Trigger
+CREATE OR REPLACE TRIGGER NO_SHORT_STOP_TRG
+AFTER INSERT OR UPDATE ON TRAINSTOP
+FOR EACH ROW
+BEGIN 
+   IF :NEW.stopNumber_ID < 12 THEN
+   RAISE_APPLICATION_ERROR(-20001,'Stopnumber ' || :NEW.stopNumber_ID 
+|| ' is less than 12.  Record not added');
+   END IF;
+END;
+/
+
+Sample SQL Server Validation Trigger
+CREATE TRIGGER NO_SHORT_STOP_TRG
+ON TrainStop AFTER INSERT 
+AS
+DECLARE
+@stopNumber Decimal
+BEGIN 
+   set @stopNumber = (Select stopNumber_ID from inserted);
+   if @stopNumber < 12
+      BEGIN
+        ROLLBACK
+        RAISERROR('Stopnumber  is less than 12.  Record not added', -1,1);
+      END;
+END
+
+Sample Postgres Validation Trigger
+CREATE OR REPLACE FUNCTION NO_SHORT_STOP_FUNC() 
+RETURNS TRIGGER LANGUAGE plpgsql 
+AS $trigfunc$ 
+BEGIN RAISE EXCEPTION USING MESSAGE = 'Stopnumber  is less than 12.  Record not added', ERRCODE = 22000; 
+END; 
+$trigfunc$;
+
+CREATE TRIGGER NO_SHORT_STOP_TRG 
+AFTER UPDATE OR INSERT ON TrainStop
+ FOR EACH ROW WHEN(new. stopNumber_ID < 12) 
+EXECUTE PROCEDURE NO_SHORT_STOP_FUNC();
