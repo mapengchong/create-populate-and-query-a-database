@@ -1,0 +1,51 @@
+Bookstore Project Overview
+
+In this project, I would like to build a database called “bookstore” used by the library front desk. This database will allow employee to check the customer book lists. When employee uses this database, they will see the customer full borrowing book list and personal information. If the customer is first time visit, they need to fill out the form with all register info and each customer will have an ID number. This number can access by employee at library to check the customer status.  After customer returning the book, the employee can access the database to make sure book is returned and marked “returned”. 
+
+Below is the example of how this database works. James is a new customer and he want to borrow few books he is interested. When he talks to the front desk, the employee gives him a form. The form contains his own personal information. Such as, email address, phone number, age, and etc. After the register process, James have his ID number and now he is allowed to borrow books at library. The employee will store James information then scan the book, there will be a list when employee scan the book. The list shows James borrow 3 books and the date he borrowed. After few weeks, James finished reading the book. He returned three books to the library and employee marked returned sign on his ID through database. Bookstore database will focus on store customer information and book borrow status for each customer. I am thinking adding a TEXT message reminder, maybe in the future week I will talk more about it. 
+
+
+
+Bookstore Use Cases and Fields
+The most unique thing is the register process, when new customer fill out the form to store their info and ID (Each person have their own).
+
+ID Register USE Case
+1.	Customer visit the library first time and the fill out the form given by employee
+2.	The customer enters their personal information 
+3.	Employee store this information in bookstore database and customer get an ID
+4.	Customer can use ID to borrow book (scan by employee)
+
+This use case need storing the customers personal information which is step1 to 3. Step 4 is for employee using to check the customer status. Below is the unique filed for ID register USE case.
+
+
+
+
+
+
+Fields	What stores	Why needed
+FirstName	First name of customer	It’s necessary for employee for future communication 
+LastName	Last name of customer	It’s necessary for employee for future communication
+ID number	ID number for the customer	To identify the person and it is required when customer borrows book
+Booklist	Book customer borrow/return	To check the book status
+Phone number	Customer phone number	Send Text message remind
+
+
+Other unique USE CASE is when employee scan the ID, employee can check the book that customer borrows and return
+
+Scan ID Use Case
+1.	The employee scans the customer ID to check the booklist
+2.	When customer return the book, the book will be marked returned (Scan by employee)
+
+Field	What stores	Why need
+ID number	To see the Book list and identify person	To identify the person
+Book borrow	Book name customer borrowed	What book customer borrow
+Book return	Book name customer returned	What book customer return
+TEXT message	Send remind to customer	Remind customer for returning
+
+
+The Scan ID Use Case allow employee access the customer ID and look through what book customer borrow and returned, if there is a book customer not returning, the TEXT message will be sent to the customer.
+
+
+Summary and Reflection
+
+My bookstore project is a database that used by any library. This can store the customer information. The most unique is the customer ID. Employee are able to Scan the customer ID to gain access to see what book the customer borrow and return. If there are some books that customer not returning, the TEXT message will remind the customer. In the future weeks, I will add more details about how SCAN and Text message works through.
