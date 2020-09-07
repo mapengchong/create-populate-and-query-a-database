@@ -1,0 +1,141 @@
+Bookstore Project Overview
+
+In this project, I would like to build a database called “bookstore” used by the library front desk. This database will allow employee to check the customer book lists. When employee uses this database, they will see the customer full borrowing book list and personal information. If the customer is first time visit, they need to fill out the form with all register info and each customer will have an ID number. This number can access by employee at library to check the customer status.  After customer returning the book, the employee can access the database to make sure book is returned and marked “returned”. 
+
+Below is the example of how this database works. James is a new customer and he want to borrow few books he is interested. When he talks to the front desk, the employee gives him a form. The form contains his own personal information. Such as, email address, phone number, age, and etc. After the register process, James have his ID number and now he is allowed to borrow books at library. The employee will store James information then scan the book, there will be a list when employee scan the book. The list shows James borrow 3 books and the date he borrowed. After few weeks, James finished reading the book. He returned three books to the library and employee marked returned sign on his ID through database. Bookstore database will focus on store customer information and book borrow status for each customer. I am thinking adding a TEXT message reminder, maybe in the future week I will talk more about it. 
+
+
+
+Bookstore Use Cases and Fields
+The most unique thing is the register process, when new customer fill out the form to store their info and ID (Each person have their own).
+
+ID Register USE Case
+1.	Customer visit the library first time and the fill out the form given by employee
+2.	The customer enters their personal information 
+3.	Employee store this information in bookstore database and customer get an ID
+4.	Customer can use ID to borrow book (scan by employee)
+
+This use case need storing the customers personal information which is step1 to 3. Step 4 is for employee using to check the customer status. Below is the unique filed for ID register USE case.
+
+
+
+
+
+
+Fields	What stores	Why needed
+FirstName	First name of customer	It’s necessary for employee for future communication 
+LastName	Last name of customer	It’s necessary for employee for future communication
+ID number	ID number for the customer	To identify the person and it is required when customer borrows book
+Booklist	Book customer borrow/return	To check the book status
+Phone number	Customer phone number	Send Text message remind
+
+
+Other unique USE CASE is when employee scan the ID, employee can check the book that customer borrows and return
+
+Scan ID Use Case
+1.	The employee scans the customer ID to check the booklist
+2.	When customer return the book, the book will be marked returned (Scan by employee)
+
+Field	What stores	Why need
+ID number	To see the Book list and identify person	To identify the person
+Book borrow	Book name customer borrowed	What book customer borrow
+Book return	Book name customer returned	What book customer return
+TEXT message	Send remind to customer	Remind customer for returning
+
+
+The Scan ID Use Case allow employee access the customer ID and look through what book customer borrow and returned, if there is a book customer not returning, the TEXT message will be sent to the customer.
+
+Structural Rules
+
+The ID register use case has several unique things process. The database, which used to track customer status. This use case need storing the customers personal information which is step1 to 3. Step 4 is for employee using to check the customer status. I was focusing on how database stores customers information. In step 3, there is one entity - Customer ID.
+
+The Scan ID Use Case allow employee access the customer ID and look through what book customer borrow and returned, if there is a book customer not returning, the TEXT message will be sent to the customer. In this use case I see three components which are booklist, return, borrow. As I mentioned in the previous use case, the customer ID used to hold customer information, since we need to store booklist (customer borrow and returned).  Employees need carefully put all the customer info from form into our bookstore database. Now, we can create some structural database rules below.
+
+1.	Each booklist is associated with a customer ID; each customer ID may be associated with many booklists.
+
+The reason I create this rule because the customer ID is the most unique thing that employees and bookstore database system can identify yourself. The customer ID will create once customer turn in the form, no matter they borrow the book or not. If they borrow books, they will have a booklist associated with customer ID.
+
+2.	Each returned or borrowed book is from a customer ID; each customer ID has one to many booklists. 
+
+This rule shows that each returned or borrowed book has connection with customer ID.
+And each customer ID can have many booklists. 
+
+3.	Each returned or borrow book will scan by employee; employee will have access to send TEXT message to people who has booklist a reminder.
+
+This rule indicates that every book will scan by employee, this is many to one relationship. Then, employee can send TEXT message to the customer who has a booklist. This can be one to many.
+
+Entity-relationship diagram
+
+Above is all the structural rules I have right now.
+1.	Each booklist is associated with a customer ID; each customer ID may be associated with many booklists.
+2.	Each returned or borrowed book is from a customer ID; each customer ID has one to many booklists. 
+3.	Each returned or borrow book will scan by employee; employee will have access to send TEXT message to people who has booklist a reminder.
+Adding Specialization-Generalization to My bookstore
+After I review the cases, I found that one interesting point.
+
+Scan ID Use Case
+1.	The employee scans the customer ID to check the booklist
+2.	When customer return the book, the book will be marked returned (Scan by employee)
+
+I noticed that the text message should send to the customer who did not return the book, so I add as follow.
+
+Scan ID Use Case( New)
+1.	The employee scans the customer ID to check the booklist
+2.	When customer return the book, the book will be marked returned (Scan by employee)
+3.	The employee will send Text message to who did not returned the book.
+
+
+
+Step #3 mentioned that text message is send to the customer who did not returned the book.
+So another structural rule is A Text message is send to customer who did not returned book.
+This specialization-generalization rule tells us that only customer who did not returned book will received the text message.
+
+Another point I was noticed on my previous case can be improved is as follow.
+
+ID Register USE Case
+1.	Customer visit the library first time and the fill out the form given by employee
+2.	The customer enters their personal information 
+3.	Employee store this information in bookstore database and customer get an ID
+4.	Customer can use ID to borrow book (scan by employee)
+
+Step#4 mentioned that scan ID to borrow book, I also want to add scan id to returned book, to online material.
+
+ID Register USE Case (New)
+1.	Customer visit the library first time and the fill out the form given by employee
+2.	The customer enters their personal information 
+3.	Employee store this information in bookstore database and customer get an ID
+4.	Customer can use ID to borrow book, returned book, and get online material. (scan by employee)
+
+
+Now, another structural rule is Scan Id can borrow book, returned book and get online material.
+Add the previous 3 rules, now I have five total.
+
+1.	Each booklist is associated with a customer ID; each customer ID may be associated with many booklists.
+
+2.	Each returned or borrowed book is from a customer ID; each customer ID has one to many booklists. 
+
+3.	Each returned or borrow book will scan by employee; employee will have access to send TEXT message to people who has booklist a reminder.
+
+4.	A text message is sent to the customer who did not returned book.
+
+5.	Customer can use ID to borrow book, returned book, and get online material
+Customer_ID/Booklist relationship is one to one. Each customer ID has one booklist.
+
+Employee/ Customer_ID relationship is 1: M. Employee can access many customer ID.
+
+Employee/SendText relationship is one to one. Employee send message to customer. 
+
+Indexing
+Below is the list of all indexed.
+
+Customer.id
+Employee.id
+Sendtext.textid
+
+All my foreign need the index, below is the list.
+Booklist.bookid
+Borrow.bookname
+Return.bookname
+Borrow.borrowdate
+Return.returndate
+
